@@ -23,7 +23,7 @@ use Illuminate\Support\Facades\Route;
 
 Route::get('/tasks', function (){
     return view('index', [
-       'tasks' => \App\Models\Task::latest()->paginate(5)
+       'tasks' => (new \App\Services\TaskmanagerService())->getTasksByUser()
     ]);
 })->name('tasks.index');
 
@@ -46,8 +46,6 @@ Route::get('/', function() {
 
 Route::post('/tasks', function(TaskRequest $request) {
     $task = Task::create($request->validated());
-
-    
 
     return redirect()->route('tasks.show', ['id'=> $task->id]) -> with('success', 'Task created successfully');
 })->name('tasks.store');
@@ -91,16 +89,16 @@ Route::delete('/tasks/{id}' , function ($id) {
     return response()->route('tasks.index') -> with('error', 'Error al eliminar el registro');
    }
 
-    
+
 })->name('tasks.destroy');
 
 Route::put('tasks/{id}/toggle-complete', function($id) {
-    
+
 
     $task = Task::findOrFail($id);
     $task -> toggleComplete();
 
     return redirect()->back()->with('success', 'Tarea actualizada');
 
-    
+
 })->name('tasks.toggle-complete');
