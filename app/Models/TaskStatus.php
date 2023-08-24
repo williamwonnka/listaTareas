@@ -5,19 +5,16 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
-class User  extends Model
+class TaskStatus  extends Model
 {
     use SoftDeletes;
 
-    protected $table = 'user';
+    protected $table = 'task_status';
     protected $primaryKey = 'id';
     protected $connection = 'MAIN_MYSQL_DB';
 
     protected $fillable = [
-        'username',
-        'password',
-        'name',
-        'lastname'
+        'name'
     ];
 
     protected $guarded = [
@@ -26,11 +23,6 @@ class User  extends Model
 
     public function tasks()
     {
-        return $this->hasMany(Task::class, 'user_id', 'id');
-    }
-
-    public function comments()
-    {
-        return $this->hasMany(CommentsByTask::class, 'user_id', 'id');
+        return $this->hasMany(Task::class, 'status_id', 'id');
     }
 }

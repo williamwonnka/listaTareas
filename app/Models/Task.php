@@ -2,17 +2,40 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\SoftDeletes;
 
 class Task extends Model
 {
-    use HasFactory;
+    use SoftDeletes;
 
-    protected $fillable = ['title', 'description', 'longDescription'];
+    protected $table = 'task';
+    protected $primaryKey = 'id';
+    protected $connection = 'MAIN_MYSQL_DB';
 
-    public function toggleComplete() {
-        $this->completed = !$this->completed;
-        $this->save();
+    protected $fillable = [
+        'name',
+        'details',
+        'user_id',
+        'status_id'
+    ];
+
+    protected $guarded = [
+        'id'
+    ];
+
+    public function user()
+    {
+        return $this->belongsTo(User::class, 'user_id', 'id');
+    }
+
+    public function status()
+    {
+        return $this->belongsTo(TaskStatus::class, 'status_id', 'id');
+    }
+
+    public function comments()
+    {
+        return $this->hasMany(CommentsByTask::class, 'task_id', 'id');
     }
 }
