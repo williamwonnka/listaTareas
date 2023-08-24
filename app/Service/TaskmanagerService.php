@@ -8,14 +8,14 @@ class TaskmanagerService
 {
     protected $taskRepository;
 
-    public function __construct(TaskManagerRepository $taskRepository = null)
+    public function __construct(TaskManagerRepository $taskRepository)
     {
-        $this->taskRepository = $taskRepository ?? new TaskManagerRepository();
+        $this->taskRepository = $taskRepository;
     }
 
-    public function getTasksByUser(int $userId = null)
+    public function getTasksByUser(int $userId)
     {
-        return $this->taskRepository->getTasks($userId);
+        return $this->taskRepository->getTasksByUser($userId);
     }
 
     public function getTaskById(int $taskId)

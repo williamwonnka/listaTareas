@@ -7,12 +7,9 @@ use Illuminate\Support\Collection;
 
 class TaskManagerRepository
 {
-    public function getTasks(int $userId): Collection
+    public function getTasksByUser(int $userId): Collection
     {
-        if($userId != null)
-            return Task::where('user_id', $userId)->latest()->paginate(5);
-        else
-            return Task::latest()->paginate(5);
+        return Task::where('user_id', $userId)->get();
     }
 
     public function getTaskById(int $taskId): ?Task

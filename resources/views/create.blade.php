@@ -28,7 +28,7 @@
 
                     <div class="form-group">
                         <label for="longDescription">Descripción Larga</label>
-                        <input type="hidden" name="longDescription" id="longDescription" rows="5">`{{ old('longDescription') }}</input>
+                        <textarea class="form-control" name="longDescription" id="longDescription" rows="5">{{ old('longDescription') }}</textarea>
                         @error('longDescription')
                         <small class="text-danger">{{ $message }}</small>
                         @enderror
