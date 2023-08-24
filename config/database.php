@@ -15,7 +15,7 @@ return [
     |
     */
 
-    'default' => env('DB_CONNECTION', 'mysql'),
+    'default' => env('DB_CONNECTION', 'MAIN_MYSQL_DB'),
 
     /*
     |--------------------------------------------------------------------------
@@ -61,6 +61,28 @@ return [
             'options' => extension_loaded('pdo_mysql') ? array_filter([
                 PDO::MYSQL_ATTR_SSL_CA => env('MYSQL_ATTR_SSL_CA'),
             ]) : [],
+        ],
+
+        'MAIN_MYSQL_DB' => [
+            'driver' => 'mysql',
+            'url' => env('DATABASE_URL'),
+            'host' => env('MAIN_MYSQL_DB_HOST', '127.0.0.1'),
+            'port' => env('MAIN_MYSQL_DB_PORT', '3306'),
+            'database' => env('MAIN_MYSQL_DB_DATABASE', 'forge'),
+            'username' => env('MAIN_MYSQL_DB_USERNAME', 'forge'),
+            'password' => env('MAIN_MYSQL_DB_PASSWORD', ''),
+            'unix_socket' => env('MAIN_MYSQL_DB_SOCKET', ''),
+            'charset' => 'utf8mb4',
+            'collation' => 'utf8mb4_unicode_ci',
+            'prefix' => '',
+            'prefix_indexes' => true,
+            'strict' => false,//compatibility with MySql v5.6<
+            'engine' => null,
+            'options' => extension_loaded('pdo_mysql') ? array_filter([
+                                                                          PDO::MYSQL_ATTR_SSL_CA => env('MYSQL_ATTR_SSL_CA'),
+                                                                          PDO::ATTR_FETCH_TABLE_NAMES => false,
+                                                                          PDO::ATTR_EMULATE_PREPARES => true
+                                                                      ]) : [],
         ],
 
         'pgsql' => [
