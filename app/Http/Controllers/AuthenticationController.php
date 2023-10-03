@@ -62,4 +62,60 @@ class AuthenticationController extends Controller
             );
         }
     }
+
+    public function register(Request $request)
+    {
+        $allParameterInApi = [
+            'username' => 'required|string',
+            'password' => 'required|string',
+            'name' => 'string',
+            'lastname' => 'string'
+        ];
+
+        $response = $this->validateParameters($allParameterInApi, $request->all());
+
+        if (!$response->status)
+        {
+            return $this->error(
+                $response->data,
+                $this->errorBadRequest
+            );
+        }
+
+        $apiDataReceived = $response->data;
+
+        //validating non required parameters
+        if (!isset($apiDataReceived['name']))
+            $apiDataReceived['name'] = '';
+
+        if (!isset($apiDataReceived['lastname']))
+            $apiDataReceived['lastname'] = '';
+
+        //start script
+
+        $authenticationResponse = $this->authenticationService->register(
+            $apiDataReceived['username'],
+            $apiDataReceived['password'],
+            $apiDataReceived['name'],
+            $apiDataReceived['lastname']
+        );
+
+        if ($authenticationResponse->status)
+        {
+            return $this->success(
+                ['user_id' => $authenticationResponse->userId],
+                'User registered successfully'
+            );
+        }
+        else
+        {
+            return $this->error(
+                [
+                    'errorType' => $authenticationResponse->errorType,
+                    'detail' => $authenticationResponse->errorMessage
+                ],
+                $this->errorBadRequest
+            );
+        }
+    }
 }
