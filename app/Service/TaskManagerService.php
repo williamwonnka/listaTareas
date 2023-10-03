@@ -89,4 +89,28 @@ class TaskManagerService
 
         return $response;
     }
+
+    public function createTask(string $title, string $details, int|null $userId, int|null $sprintId)
+    {
+        $response = new TaskManagerServiceResponse();
+
+        $result = $this->taskRepository->createTask($title, $details, $userId, $sprintId);
+
+        if ($result)
+        {
+            $response->status = true;
+            $response->message = 'Task created';
+            $response->data = $result->toArray();
+
+            return $response;
+        }
+        else
+        {
+            $response->status = false;
+            $response->errorType = 'internal_error';
+            $response->errorMessage = 'Task not created';
+
+            return $response;
+        }
+    }
 }

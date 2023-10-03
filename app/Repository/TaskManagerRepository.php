@@ -53,4 +53,18 @@ class TaskManagerRepository
     {
         return TaskStatus::find($statusId);
     }
+
+    public function createTask(string $title, string $details, ?int $userId, ?int $sprintId): Task
+    {
+        $task = new Task();
+
+        $task->title = $title;
+        $task->details = $details;
+        $task->user_id = $userId;
+        $task->sprint_id = $sprintId;
+
+        $task->save();
+
+        return $task->refresh();
+    }
 }

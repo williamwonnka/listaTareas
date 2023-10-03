@@ -15,7 +15,7 @@ class Task extends Model
     protected $connection = 'MAIN_MYSQL_DB';
 
     protected $fillable = [
-        'name',
+        'title',
         'details',
         'user_id',
         'status_id',

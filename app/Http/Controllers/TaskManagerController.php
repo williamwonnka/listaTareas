@@ -19,8 +19,8 @@ class TaskManagerController extends Controller
         $allParameterInApi = [
             'sprint_id' => 'integer',
             'user_id' => 'integer',
-            'page' => 'integer|default:1',
-            'per_page' => 'integer|default:5'
+            'page' => 'integer',
+            'per_page' => 'integer'
         ];
 
         $response = $this->validateParameters($allParameterInApi, $request->all());
@@ -113,6 +113,47 @@ class TaskManagerController extends Controller
         // start endpoint logic
 
         $response = $this->taskService->updateTaskStatus($apiDataReceived['task_id'], $apiDataReceived['status_id']);
+
+        if($response->status)
+        {
+            return response()->json($response);
+        }
+        else
+        {
+            return $this->error(
+                [
+                    'errorType' => $response->errorType,
+                    'detail' => $response->errorMessage
+                ],
+                $this->errorBadRequest
+            );
+        }
+    }
+
+    public function createTask(Request $request)
+    {
+        $allParameterInApi = [
+            'title' => 'required|string',
+            'details' => 'required|string',
+            'user_id' => 'integer',
+            'sprint_id' => 'integer'
+        ];
+
+        $response = $this->validateParameters($allParameterInApi, $request->all());
+
+        if (!$response->status)
+        {
+            return $this->error(
+                $response->data,
+                $this->errorBadRequest
+            );
+        }
+
+        $apiDataReceived = $response->data;
+
+        // start endpoint logic
+
+        $response = $this->taskService->createTask($apiDataReceived['title'], $apiDataReceived['details'], $apiDataReceived['user_id'] ?? null, $apiDataReceived['sprint_id'] ?? null);
 
         if($response->status)
         {
