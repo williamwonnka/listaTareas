@@ -53,6 +53,47 @@ class TaskManagerController extends Controller
         return response()->json($tasks);
     }
 
+    public function getTasksDetails(Request $request)
+    {
+        $allParameterInApi = [
+            'task_id' => 'required|integer'
+        ];
+
+        $response = $this->validateParameters($allParameterInApi, $request->all());
+
+        if (!$response->status)
+        {
+            return $this->error(
+                $response->data,
+                $this->errorBadRequest
+            );
+        }
+
+        $apiDataReceived = $response->data;
+
+        // start endpoint logic
+
+        $tasks = $this->taskService->getTasksDetails($apiDataReceived['task_id']);
+
+        if ($tasks->status)
+        {
+            return response()->json($tasks->data);
+        }
+        else
+        {
+            return $this->error(
+                [
+                    'errorType' => $tasks->errorType,
+                    'detail' => $tasks->errorMessage
+                ],
+                $this->errorBadRequest
+            );
+        }
+    }
+
+
+
+
     public function getTaskById(int $taskId)
     {
         $task = $this->taskService->getTaskById($taskId);

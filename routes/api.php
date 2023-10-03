@@ -22,4 +22,6 @@ Route::group(['prefix' => 'authentication'], function () {
 
 Route::middleware('customAuth')->prefix('tasksManagement')->group(function () {
     Route::get('getTaskList', [TaskManagerController::class, 'getTasksList']);
+
+    Route::get('getTasksDetails', [TaskManagerController::class, 'getTasksDetails']);
 });

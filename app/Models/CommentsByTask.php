@@ -7,8 +7,6 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 
 class CommentsByTask  extends Model
 {
-    use SoftDeletes;
-
     protected $table = 'comments_by_task';
     protected $primaryKey = 'id';
     protected $connection = 'MAIN_MYSQL_DB';
