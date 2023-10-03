@@ -7,9 +7,7 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 
 class TaskStatus  extends Model
 {
-    use SoftDeletes;
-
-    protected $table = 'task_status';
+    protected $table = 'task_statuses';
     protected $primaryKey = 'id';
     protected $connection = 'MAIN_MYSQL_DB';
 

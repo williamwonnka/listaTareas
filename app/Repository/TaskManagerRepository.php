@@ -3,6 +3,7 @@
 namespace App\Repository;
 
 use App\Models\Task;
+use App\Models\TaskStatus;
 use Illuminate\Support\Collection;
 
 class TaskManagerRepository
@@ -20,10 +21,14 @@ class TaskManagerRepository
     public function updateTaskStatus(int $taskId, int $statusId): bool
     {
         $task = Task::find($taskId);
-        if ($task) {
-            $task->task_status_id = $statusId;
+
+        if ($task)
+        {
+            $task->status_id = $statusId;
+
             return $task->save();
         }
+
         return false;
     }
 
@@ -42,5 +47,10 @@ class TaskManagerRepository
         }
 
         return $builder->latest()->paginate($perPage, page: $page);
+    }
+
+    public function validateTaskStatus(int $statusId)
+    {
+        return TaskStatus::find($statusId);
     }
 }

@@ -91,25 +91,42 @@ class TaskManagerController extends Controller
         }
     }
 
-
-
-
-    public function getTaskById(int $taskId)
+    public function updateTaskStatus(Request $request)
     {
-        $task = $this->taskService->getTaskById($taskId);
-        return response()->json($task);
-    }
+        $allParameterInApi = [
+            'status_id' => 'required|integer',
+            'task_id' => 'required|integer'
+        ];
 
-    public function getCommentsByTaskId(int $taskId)
-    {
-        $comments = $this->taskService->getCommentsByTaskId($taskId);
-        return response()->json($comments);
-    }
+        $response = $this->validateParameters($allParameterInApi, $request->all());
 
-    public function updateTaskStatus(Request $request, int $taskId)
-    {
-        $statusId = $request->input('status_id');
-        $success = $this->taskService->updateTaskStatus($taskId, $statusId);
-        return response()->json(['success' => $success]);
+        if (!$response->status)
+        {
+            return $this->error(
+                $response->data,
+                $this->errorBadRequest
+            );
+        }
+
+        $apiDataReceived = $response->data;
+
+        // start endpoint logic
+
+        $response = $this->taskService->updateTaskStatus($apiDataReceived['task_id'], $apiDataReceived['status_id']);
+
+        if($response->status)
+        {
+            return response()->json($response);
+        }
+        else
+        {
+            return $this->error(
+                [
+                    'errorType' => $response->errorType,
+                    'detail' => $response->errorMessage
+                ],
+                $this->errorBadRequest
+            );
+        }
     }
 }

@@ -21,7 +21,41 @@ class TaskManagerService
 
     public function updateTaskStatus(int $taskId, int $statusId)
     {
-        return $this->taskRepository->updateTaskStatus($taskId, $statusId);
+        $response = new TaskManagerServiceResponse();
+
+        if($this->taskRepository->getTaskById($taskId) == null)
+        {
+            $response->status = false;
+            $response->errorType = 'not_found';
+            $response->errorMessage = 'Task not found';
+
+            return $response;
+        }
+
+        if(!$this->taskRepository->validateTaskStatus($statusId))
+        {
+            $response->status = false;
+            $response->errorType = 'not_found';
+            $response->errorMessage = 'Status not found';
+
+            return $response;
+        }
+
+        if($this->taskRepository->updateTaskStatus($taskId, $statusId))
+        {
+            $response->status = true;
+            $response->message = 'Task status updated';
+
+            return $response;
+        }
+        else
+        {
+            $response->status = false;
+            $response->errorType = 'internal_error';
+            $response->errorMessage = 'Task status not updated';
+
+            return $response;
+        }
     }
 
     public function getTasksList(array $filters, mixed $page, mixed $perPage)
