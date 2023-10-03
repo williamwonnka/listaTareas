@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\AuthenticationController;
+use App\Http\Controllers\ProjectManagerController;
 use App\Http\Controllers\TaskManagerController;
 use Illuminate\Support\Facades\Route;
 
@@ -32,4 +33,10 @@ Route::middleware('customAuth')->prefix('tasksManagement')->group(function () {
     Route::put('updateTask', [TaskManagerController::class, 'updateTask']);
 
     Route::delete('deleteTask', [TaskManagerController::class, 'deleteTask']);
+});
+
+Route::middleware('customAuth')->prefix('projectsManagement')->group(function () {
+    Route::get('getProjectList', [ProjectManagerController::class, 'getProjectList']);
+
+
 });
