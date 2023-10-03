@@ -1,20 +1,12 @@
 <?php
 
-namespace App\Repositories;
+namespace App\Repository;
 
 use App\Models\Task;
 use Illuminate\Support\Collection;
 
 class TaskManagerRepository
 {
-    public function getTasks(int $userId): Collection
-    {
-        if($userId != null)
-            return Task::where('user_id', $userId)->latest()->paginate(5);
-        else
-            return Task::latest()->paginate(5);
-    }
-
     public function getTaskById(int $taskId): ?Task
     {
         return Task::find($taskId);
@@ -33,5 +25,22 @@ class TaskManagerRepository
             return $task->save();
         }
         return false;
+    }
+
+    public function getTasksList(array $filters, $page, $perPage)
+    {
+        $builder = Task::query();
+
+        if($filters['sprint_id'])
+        {
+            $builder->where('sprint_id', $filters['sprint_id']);
+        }
+
+        if ($filters['user_id'])
+        {
+            $builder->where('user_id', $filters['user_id']);
+        }
+
+        return $builder->latest()->paginate($perPage, page: $page);
     }
 }

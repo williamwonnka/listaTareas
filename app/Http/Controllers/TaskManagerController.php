@@ -2,21 +2,54 @@
 
 namespace App\Http\Controllers;
 
-use App\Services\TaskmanagerService;
+use App\Service\TaskManagerService;
 use Illuminate\Http\Request;
 
 class TaskManagerController extends Controller
 {
-    protected $taskService;
+    protected TaskManagerService $taskService;
 
-    public function __construct(TaskmanagerService $taskService)
+    public function __construct(TaskManagerService $taskService)
     {
         $this->taskService = $taskService;
     }
 
-    public function getTasksByUser(int $userId)
+    public function getTasksList(Request $request)
     {
-        $tasks = $this->taskService->getTasksByUser($userId);
+        $allParameterInApi = [
+            'sprint_id' => 'integer',
+            'user_id' => 'integer',
+            'page' => 'integer|default:1',
+            'per_page' => 'integer|default:5'
+        ];
+
+        $response = $this->validateParameters($allParameterInApi, $request->all());
+
+        if (!$response->status)
+        {
+            return $this->error(
+                $response->data,
+                $this->errorBadRequest
+            );
+        }
+
+        $apiDataReceived = $response->data;
+
+        if (!isset($apiDataReceived['page']))
+            $apiDataReceived['page'] = 1;
+
+        if (!isset($apiDataReceived['per_page']))
+            $apiDataReceived['per_page'] = 5;
+
+        // start endpoint logic
+
+        $filters = [
+            'sprint_id' => $apiDataReceived['sprint_id'] ?? null,
+            'user_id' => $apiDataReceived['user_id'] ?? null
+        ];
+
+        $tasks = $this->taskService->getTasksList($filters, $apiDataReceived['page'], $apiDataReceived['per_page']);
+
         return response()->json($tasks);
     }
 

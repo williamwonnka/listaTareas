@@ -8,10 +8,9 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 
 class Task extends Model
 {
-    use SoftDeletes;
     use HasFactory;
 
-    protected $table = 'task';
+    protected $table = 'tasks';
     protected $primaryKey = 'id';
     protected $connection = 'MAIN_MYSQL_DB';
 
@@ -19,7 +18,8 @@ class Task extends Model
         'name',
         'details',
         'user_id',
-        'status_id'
+        'status_id',
+        'sprint_id'
     ];
 
     protected $guarded = [
