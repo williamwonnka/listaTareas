@@ -28,4 +28,6 @@ Route::middleware('customAuth')->prefix('tasksManagement')->group(function () {
     Route::patch('updateTaskStatus', [TaskManagerController::class, 'updateTaskStatus']);
 
     Route::post('createTask', [TaskManagerController::class, 'createTask']);
+
+    Route::put('updateTask', [TaskManagerController::class, 'updateTask']);
 });

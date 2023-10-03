@@ -113,4 +113,30 @@ class TaskManagerService
             return $response;
         }
     }
+
+    public function updateTask(int $taskId, string|null $title, string|null $details, int|null $userId, int|null $statusId, int|null $sprintId)
+    {
+        $response = new TaskManagerServiceResponse();
+
+        $result = $this->taskRepository->updateTask($taskId, $title, $details, $userId, $statusId, $sprintId);
+
+        $taskUpdated = $this->taskRepository->getTaskById($taskId);
+
+        if ($result > 0)
+        {
+            $response->status = true;
+            $response->message = 'Task updated';
+            $response->data = $taskUpdated->toArray();
+
+            return $response;
+        }
+        else
+        {
+            $response->status = false;
+            $response->errorType = 'internal_error';
+            $response->errorMessage = 'Task not updated';
+
+            return $response;
+        }
+    }
 }

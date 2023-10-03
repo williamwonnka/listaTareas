@@ -134,7 +134,7 @@ class TaskManagerController extends Controller
     {
         $allParameterInApi = [
             'title' => 'required|string',
-            'details' => 'required|string',
+            'details' => 'string',
             'user_id' => 'integer',
             'sprint_id' => 'integer'
         ];
@@ -153,7 +153,57 @@ class TaskManagerController extends Controller
 
         // start endpoint logic
 
-        $response = $this->taskService->createTask($apiDataReceived['title'], $apiDataReceived['details'], $apiDataReceived['user_id'] ?? null, $apiDataReceived['sprint_id'] ?? null);
+        $response = $this->taskService->createTask($apiDataReceived['title'], $apiDataReceived['details'] ?? '', $apiDataReceived['user_id'] ?? null, $apiDataReceived['sprint_id'] ?? null);
+
+        if($response->status)
+        {
+            return response()->json($response);
+        }
+        else
+        {
+            return $this->error(
+                [
+                    'errorType' => $response->errorType,
+                    'detail' => $response->errorMessage
+                ],
+                $this->errorBadRequest
+            );
+        }
+    }
+
+    public function updateTask(Request $request)
+    {
+        $allParameterInApi = [
+            'task_id' => 'required|integer',
+            'title' => 'string',
+            'details' => 'string',
+            'user_id' => 'integer',
+            'status_id' => 'integer',
+            'sprint_id' => 'integer'
+        ];
+
+        $response = $this->validateParameters($allParameterInApi, $request->all());
+
+        if (!$response->status)
+        {
+            return $this->error(
+                $response->data,
+                $this->errorBadRequest
+            );
+        }
+
+        $apiDataReceived = $response->data;
+
+        // start endpoint logic
+
+        $response = $this->taskService->updateTask(
+            $apiDataReceived['task_id'],
+            $apiDataReceived['title'] ?? null,
+            $apiDataReceived['details'] ?? null,
+            $apiDataReceived['user_id'] ?? null,
+            $apiDataReceived['status_id'] ?? null,
+            $apiDataReceived['sprint_id'] ?? null
+        );
 
         if($response->status)
         {

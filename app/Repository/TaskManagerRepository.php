@@ -67,4 +67,38 @@ class TaskManagerRepository
 
         return $task->refresh();
     }
+
+    public function updateTask($taskId, ?string $title, ?string $details, ?int $userId, ?int $statusId, ?int $sprintId): int
+    {
+        $builder = Task::where('id', $taskId);
+
+        $updatesArray = [];
+
+        if ($title)
+        {
+            $updatesArray['title'] = $title;
+        }
+
+        if ($details)
+        {
+            $updatesArray['details'] = $details;
+        }
+
+        if ($userId)
+        {
+            $updatesArray['user_id'] = $userId;
+        }
+
+        if ($statusId)
+        {
+            $updatesArray['status_id'] = $statusId;
+        }
+
+        if ($sprintId)
+        {
+            $updatesArray['sprint_id'] = $sprintId;
+        }
+
+        return $builder->update($updatesArray);
+    }
 }
