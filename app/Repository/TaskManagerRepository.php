@@ -101,4 +101,16 @@ class TaskManagerRepository
 
         return $builder->update($updatesArray);
     }
+
+    public function deleteTask(int $taskId)
+    {
+        $task = Task::find($taskId);
+
+        if ($task)
+        {
+            return $task->delete();
+        }
+
+        return false;
+    }
 }

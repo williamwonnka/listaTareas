@@ -30,4 +30,6 @@ Route::middleware('customAuth')->prefix('tasksManagement')->group(function () {
     Route::post('createTask', [TaskManagerController::class, 'createTask']);
 
     Route::put('updateTask', [TaskManagerController::class, 'updateTask']);
+
+    Route::delete('deleteTask', [TaskManagerController::class, 'deleteTask']);
 });

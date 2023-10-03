@@ -139,4 +139,27 @@ class TaskManagerService
             return $response;
         }
     }
+
+    public function deleteTask(int $taskId)
+    {
+        $response = new TaskManagerServiceResponse();
+
+        $result = $this->taskRepository->deleteTask($taskId);
+
+        if ($result)
+        {
+            $response->status = true;
+            $response->message = 'Task deleted';
+
+            return $response;
+        }
+        else
+        {
+            $response->status = false;
+            $response->errorType = 'internal_error';
+            $response->errorMessage = 'Task not deleted';
+
+            return $response;
+        }
+    }
 }

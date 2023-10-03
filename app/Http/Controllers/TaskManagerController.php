@@ -220,4 +220,42 @@ class TaskManagerController extends Controller
             );
         }
     }
+
+    public function deleteTask(Request $request)
+    {
+        $allParameterInApi = [
+            'task_id' => 'required|integer'
+        ];
+
+        $response = $this->validateParameters($allParameterInApi, $request->all());
+
+        if (!$response->status)
+        {
+            return $this->error(
+                $response->data,
+                $this->errorBadRequest
+            );
+        }
+
+        $apiDataReceived = $response->data;
+
+        // start endpoint logic
+
+        $tasks = $this->taskService->deleteTask($apiDataReceived['task_id']);
+
+        if ($tasks->status)
+        {
+            return response()->json($tasks);
+        }
+        else
+        {
+            return $this->error(
+                [
+                    'errorType' => $tasks->errorType,
+                    'detail' => $tasks->errorMessage
+                ],
+                $this->errorBadRequest
+            );
+        }
+    }
 }
