@@ -35,4 +35,25 @@ class AdministratorManagementService
         }
         return $response;
     }
+
+    public function getAllUsers(mixed $page, mixed $per_page)
+    {
+        $response = new AdministratorManagementServiceResponse();
+
+        $users = $this->administratorManagementRepository->getAllUsers($page, $per_page);
+
+        if ($users)
+        {
+            $response->status = true;
+            $response->data = $users->toArray();
+        }
+        else
+        {
+            $response->status = false;
+            $response->errorMessage = 'No users found';
+            $response->errorType = 'not_found';
+        }
+
+        return $response;
+    }
 }

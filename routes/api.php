@@ -59,4 +59,6 @@ Route::middleware('customAuth')->prefix('backlogManagement')->group(function () 
 
 Route::middleware('customAuth')->prefix('administratorManagement')->group(function () {
     Route::post('createUser', [AdministratorManagementController::class, 'createUser']);
+
+    Route::get('getAllUsers', [AdministratorManagementController::class, 'getAllUsers']);
 });

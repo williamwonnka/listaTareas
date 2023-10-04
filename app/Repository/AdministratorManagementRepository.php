@@ -20,4 +20,11 @@ class AdministratorManagementRepository
 
         return $user->refresh();
     }
+
+    public function getAllUsers(mixed $page, mixed $perPage)
+    {
+        $users = User::latest()->paginate($perPage, page: $page);
+
+        return $users;
+    }
 }

@@ -65,4 +65,52 @@ class AdministratorManagementController extends Controller
         }
     }
 
+    public function getAllUsers(Request $request)
+    {
+        $allParameterInApi = [
+            'page' => 'integer',
+            'per_page' => 'integer'
+        ];
+
+        $response = $this->validateParameters($allParameterInApi, $request->all());
+
+        if (!$response->status)
+        {
+            return $this->error(
+                $response->data,
+                $this->errorBadRequest
+            );
+        }
+
+        $apiDataReceived = $response->data;
+
+        if (!isset($apiDataReceived['page']))
+        {
+            $apiDataReceived['page'] = 1;
+        }
+
+        if (!isset($apiDataReceived['per_page']))
+        {
+            $apiDataReceived['per_page'] = 5;
+        }
+
+        // start endpoint logic
+
+        $response = $this->administratorManagementService->getAllUsers($apiDataReceived['page'], $apiDataReceived['per_page']);
+
+        if ($response->status)
+        {
+            return response()->json($response);
+        }
+        else
+        {
+            return $this->error(
+                [
+                    'errorType' => $response->errorType,
+                    'detail' => $response->errorMessage
+                ],
+                $this->errorBadRequest
+            );
+        }
+    }
 }
