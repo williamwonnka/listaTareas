@@ -52,4 +52,38 @@ class BacklogController extends Controller
         }
     }
 
+    public function getSprintListWithTasks(Request $request)
+    {
+        $allParameterInApi = [
+            'project_id' => 'required|integer'
+        ];
+
+        $response = $this->validateParameters($allParameterInApi, $request->all());
+
+        if (!$response->status)
+        {
+            return $this->error(
+                $response->data,
+                $this->errorBadRequest
+            );
+        }
+
+        $apiDataReceived = $response->data;
+
+        // start endpoint logic
+
+        $response = $this->backlogService->getSprintListWithTasks($apiDataReceived['project_id']);
+
+        if ($response->status)
+        {
+            return response()->json($response->data);
+        }
+        else
+        {
+            return $this->error(
+                $response->data,
+                $this->errorBadRequest
+            );
+        }
+    }
 }

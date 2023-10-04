@@ -3,6 +3,7 @@
 namespace App\Repository;
 
 use App\Models\Sprint;
+use App\Models\Task;
 
 class BacklogRepository
 {
@@ -19,5 +20,22 @@ class BacklogRepository
         $sprint->save();
 
         return $sprint->refresh();
+    }
+
+    public function getSprintListWithTasks(mixed $projectId)
+    {
+        $sprintList = Sprint::whereProjectId($projectId)
+            ->orderBy('id', 'asc')
+            ->get();
+
+        return $sprintList;
+    }
+
+    public function getTasksWithoutSprint()
+    {
+        return Task::whereSprintId(null)
+            ->orderBy('id', 'asc')
+            ->get()
+            ->toArray();
     }
 }
