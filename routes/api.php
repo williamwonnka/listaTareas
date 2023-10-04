@@ -61,4 +61,6 @@ Route::middleware('customAuth')->prefix('administratorManagement')->group(functi
     Route::post('createUser', [AdministratorManagementController::class, 'createUser']);
 
     Route::get('getAllUsers', [AdministratorManagementController::class, 'getAllUsers']);
+
+    Route::put('updateUser', [AdministratorManagementController::class, 'updateUser']);
 });

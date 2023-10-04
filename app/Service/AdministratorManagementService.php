@@ -56,4 +56,52 @@ class AdministratorManagementService
 
         return $response;
     }
+
+    public function updateUser(mixed $userId, mixed $username, mixed $password, mixed $name, mixed $lastname)
+    {
+        $response = new AdministratorManagementServiceResponse();
+
+        $user = $this->administratorManagementRepository->getUserById($userId);
+
+        if ($user)
+        {
+            if($username != null && $username != '')
+            {
+                $userValidation = $this->administratorManagementRepository->getUserByUsername($username);
+
+                if ($userValidation)
+                {
+                    $response->status = false;
+                    $response->errorMessage = 'Username already exists';
+                    $response->errorType = 'already_exists';
+
+                    return $response;
+                }
+            }
+
+            $result = $this->administratorManagementRepository->updateUser($userId, $username, $password, $name, $lastname);
+
+            if ($result)
+            {
+                $updatedUser = $this->administratorManagementRepository->getUserById($userId);
+
+                $response->status = true;
+                $response->data = $updatedUser->toArray();
+            }
+            else
+            {
+                $response->status = false;
+                $response->errorMessage = 'User not updated';
+                $response->errorType = 'not_updated';
+            }
+        }
+        else
+        {
+            $response->status = false;
+            $response->errorMessage = 'User not found';
+            $response->errorType = 'not_found';
+        }
+
+        return $response;
+    }
 }

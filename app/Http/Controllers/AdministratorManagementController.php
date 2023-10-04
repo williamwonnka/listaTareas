@@ -113,4 +113,46 @@ class AdministratorManagementController extends Controller
             );
         }
     }
+
+    public function updateUser(Request $request)
+    {
+        $allParameterInApi = [
+            'userId' => 'required|integer',
+            'username' => 'string',
+            'password' => 'string',
+            'name' => 'string',
+            'lastname' => 'string'
+        ];
+
+        $response = $this->validateParameters($allParameterInApi, $request->all());
+
+        if (!$response->status)
+        {
+            return $this->error(
+                $response->data,
+                $this->errorBadRequest
+            );
+        }
+
+        $apiDataReceived = $response->data;
+
+        // start endpoint logic
+
+        $response = $this->administratorManagementService->updateUser($apiDataReceived['userId'], $apiDataReceived['username'] ?? null, $apiDataReceived['password'] ?? null, $apiDataReceived['name'] ?? null, $apiDataReceived['lastname'] ?? null);
+
+        if ($response->status)
+        {
+            return response()->json($response);
+        }
+        else
+        {
+            return $this->error(
+                [
+                    'errorType' => $response->errorType,
+                    'detail' => $response->errorMessage
+                ],
+                $this->errorBadRequest
+            );
+        }
+    }
 }

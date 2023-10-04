@@ -6,25 +6,53 @@ use App\Models\User;
 
 class AdministratorManagementRepository
 {
-
-    public function createUser(mixed $username, mixed $password, mixed $name, mixed $lastname)
-    {
-        $user = new User();
-
-        $user->username = $username;
-        $user->password = password_hash($password, PASSWORD_DEFAULT);
-        $user->name = $name;
-        $user->lastname = $lastname;
-
-        $user->save();
-
-        return $user->refresh();
-    }
-
     public function getAllUsers(mixed $page, mixed $perPage)
     {
         $users = User::latest()->paginate($perPage, page: $page);
 
         return $users;
+    }
+
+    public function getUserById(mixed $userId)
+    {
+        $user = User::find($userId);
+
+        return $user;
+    }
+
+    public function getUserByUsername(mixed $username)
+    {
+        $user = User::where('username', $username)->first();
+
+        return $user;
+    }
+
+    public function updateUser(mixed $userId, mixed $username, mixed $password, mixed $name, mixed $lastname)
+    {
+        $builder = User::where('id', $userId);
+
+        $updateData = [];
+
+        if ($username != null && $username != '')
+        {
+            $updateData['username'] = $username;
+        }
+
+        if ($password != null && $password != '')
+        {
+            $updateData['password'] = password_hash($password, PASSWORD_DEFAULT);
+        }
+
+        if ($name != null && $name != '')
+        {
+            $updateData['name'] = $name;
+        }
+
+        if ($lastname != null && $lastname != '')
+        {
+            $updateData['lastname'] = $lastname;
+        }
+
+        return$builder->update($updateData);
     }
 }
