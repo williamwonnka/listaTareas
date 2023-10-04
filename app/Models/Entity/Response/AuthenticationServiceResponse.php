@@ -4,14 +4,7 @@ namespace App\Models\Entity\Response;
 
 use stdClass;
 
-class AuthenticationServiceResponse
+class AuthenticationServiceResponse extends GenericApiResponse
 {
-    public bool $status = false;
-
-    public string $message;
-
-    public string $errorType;
-    public string $errorMessage;
-
     public int $userId;
 }

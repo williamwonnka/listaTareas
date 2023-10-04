@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\AdministratorManagementController;
 use App\Http\Controllers\AuthenticationController;
 use App\Http\Controllers\BacklogController;
 use App\Http\Controllers\ProjectManagerController;
@@ -54,4 +55,8 @@ Route::middleware('customAuth')->prefix('backlogManagement')->group(function () 
     Route::put('updateSprint', [BacklogController::class, 'updateSprint']);
 
     Route::delete('deleteSprint', [BacklogController::class, 'deleteSprint']);
+});
+
+Route::middleware('customAuth')->prefix('administratorManagement')->group(function () {
+    Route::post('createUser', [AdministratorManagementController::class, 'createUser']);
 });
