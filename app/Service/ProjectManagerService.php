@@ -2,6 +2,7 @@
 
 namespace App\Service;
 
+use App\Models\Entity\Response\ProjectManagerServiceResponse;
 use App\Models\Entity\Response\TaskManagerServiceResponse;
 use App\Repository\ProjectManagerRepository;
 use App\Repository\TaskManagerRepository;
@@ -15,85 +16,16 @@ class ProjectManagerService
         $this->projectManagerRepository = $projectManagerRepository ?? new ProjectManagerRepository();
     }
 
-    public function getCommentsByTaskId(int $taskId)
+    public function createProject(string $name, string $description)
     {
-        return $this->taskRepository->getCommentsByTaskId($taskId);
-    }
+        $response = new ProjectManagerServiceResponse();
 
-    public function updateTaskStatus(int $taskId, int $statusId)
-    {
-        $response = new TaskManagerServiceResponse();
-
-        if($this->taskRepository->getTaskById($taskId) == null)
-        {
-            $response->status = false;
-            $response->errorType = 'not_found';
-            $response->errorMessage = 'Task not found';
-
-            return $response;
-        }
-
-        if(!$this->taskRepository->validateTaskStatus($statusId))
-        {
-            $response->status = false;
-            $response->errorType = 'not_found';
-            $response->errorMessage = 'Status not found';
-
-            return $response;
-        }
-
-        if($this->taskRepository->updateTaskStatus($taskId, $statusId))
-        {
-            $response->status = true;
-            $response->message = 'Task status updated';
-
-            return $response;
-        }
-        else
-        {
-            $response->status = false;
-            $response->errorType = 'internal_error';
-            $response->errorMessage = 'Task status not updated';
-
-            return $response;
-        }
-    }
-    public function getTasksDetails(int $taskId)
-    {
-        $response = new TaskManagerServiceResponse();
-
-        $task = $this->taskRepository->getTaskById($taskId);
-
-        if (!$task)
-        {
-            $response->status = false;
-            $response->errorType = 'not_found';
-            $response->errorMessage = 'Task not found';
-
-            return $response;
-        }
-
-        $response->status = true;
-
-        $comments = $this->taskRepository->getCommentsByTaskId($taskId);
-
-        $response->data['task'] = $task;
-
-        $response->data['comments'] = $comments->toArray();
-
-        return $response;
-    }
-
-    public function createTask(string $title, string $details, int|null $userId, int|null $sprintId)
-    {
-        $response = new TaskManagerServiceResponse();
-
-        $result = $this->taskRepository->createTask($title, $details, $userId, $sprintId);
+        $result = $this->projectManagerRepository->createProject($name, $description);
 
         if ($result)
         {
             $response->status = true;
-            $response->message = 'Task created';
+            $response->message = 'Project created';
             $response->data = $result->toArray();
 
             return $response;
@@ -102,56 +34,7 @@ class ProjectManagerService
         {
             $response->status = false;
             $response->errorType = 'internal_error';
-            $response->errorMessage = 'Task not created';
-
-            return $response;
-        }
-    }
-
-    public function updateTask(int $taskId, string|null $title, string|null $details, int|null $userId, int|null $statusId, int|null $sprintId)
-    {
-        $response = new TaskManagerServiceResponse();
-
-        $result = $this->taskRepository->updateTask($taskId, $title, $details, $userId, $statusId, $sprintId);
-
-        $taskUpdated = $this->taskRepository->getTaskById($taskId);
-
-        if ($result > 0)
-        {
-            $response->status = true;
-            $response->message = 'Task updated';
-            $response->data = $taskUpdated->toArray();
-
-            return $response;
-        }
-        else
-        {
-            $response->status = false;
-            $response->errorType = 'internal_error';
-            $response->errorMessage = 'Task not updated';
-
-            return $response;
-        }
-    }
-
-    public function deleteTask(int $taskId)
-    {
-        $response = new TaskManagerServiceResponse();
-
-        $result = $this->taskRepository->deleteTask($taskId);
-
-        if ($result)
-        {
-            $response->status = true;
-            $response->message = 'Task deleted';
-
-            return $response;
-        }
-        else
-        {
-            $response->status = false;
-            $response->errorType = 'internal_error';
-            $response->errorMessage = 'Task not deleted';
+            $response->errorMessage = 'Project not created';
 
             return $response;
         }
@@ -161,4 +44,55 @@ class ProjectManagerService
     {
         return $this->projectManagerRepository->getProjectList($page, $perPage);
     }
+
+    public function updateProject(mixed $project_id, mixed $name, mixed $description)
+    {
+        $response = new ProjectManagerServiceResponse();
+
+        $result = $this->projectManagerRepository->updateProject($project_id, $name, $description);
+
+        $projectUpdated = $this->projectManagerRepository->getProjectById($project_id);
+
+        if ($result)
+        {
+            $response->status = true;
+            $response->message = 'Project updated';
+            $response->data = $projectUpdated->toArray();
+
+            return $response;
+        }
+        else
+        {
+            $response->status = false;
+            $response->errorType = 'internal_error';
+            $response->errorMessage = 'Project not updated';
+
+            return $response;
+        }
+    }
+
+    public function deleteProject(mixed $projectId)
+    {
+        $response = new ProjectManagerServiceResponse();
+
+        $result = $this->projectManagerRepository->deleteProject($projectId);
+
+        if ($result)
+        {
+            $response->status = true;
+            $response->message = 'Project deleted';
+
+            return $response;
+        }
+        else
+        {
+            $response->status = false;
+            $response->errorType = 'internal_error';
+            $response->errorMessage = 'Project not deleted';
+
+            return $response;
+        }
+    }
+
+
 }

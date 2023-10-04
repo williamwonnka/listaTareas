@@ -38,18 +38,16 @@ class ProjectManagerRepository
         return TaskStatus::find($statusId);
     }
 
-    public function createTask(string $title, string $details, ?int $userId, ?int $sprintId): Task
+    public function createProject(string $name, string $description)
     {
-        $task = new Task();
+        $project = new Project();
 
-        $task->title = $title;
-        $task->details = $details;
-        $task->user_id = $userId;
-        $task->sprint_id = $sprintId;
+        $project->name = $name;
+        $project->description = $description;
 
-        $task->save();
+        $project->save();
 
-        return $task->refresh();
+        return $project->refresh();
     }
 
     public function updateTask($taskId, ?string $title, ?string $details, ?int $userId, ?int $statusId, ?int $sprintId): int
@@ -101,5 +99,41 @@ class ProjectManagerRepository
     public function getProjectList(int $page, int $perPage)
     {
         return Project::latest()->paginate($perPage, page: $page);
+    }
+
+    public function updateProject(mixed $project_id, mixed $name, mixed $description)
+    {
+        $builder = Project::where('id', $project_id);
+
+        $updatesArray = [];
+
+        if ($name)
+        {
+            $updatesArray['name'] = $name;
+        }
+
+        if ($description)
+        {
+            $updatesArray['description'] = $description;
+        }
+
+        return $builder->update($updatesArray);
+    }
+
+    public function getProjectById(mixed $project_id)
+    {
+        return Project::find($project_id);
+    }
+
+    public function deleteProject(mixed $projectId)
+    {
+        $project = Project::find($projectId);
+
+        if ($project)
+        {
+            return $project->delete();
+        }
+
+        return false;
     }
 }

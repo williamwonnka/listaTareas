@@ -38,5 +38,9 @@ Route::middleware('customAuth')->prefix('tasksManagement')->group(function () {
 Route::middleware('customAuth')->prefix('projectsManagement')->group(function () {
     Route::get('getProjectList', [ProjectManagerController::class, 'getProjectList']);
 
+    Route::post('createProject', [ProjectManagerController::class, 'createProject']);
 
+    Route::put('updateProject', [ProjectManagerController::class, 'updateProject']);
+
+    Route::delete('deleteProject', [ProjectManagerController::class, 'deleteProject']);
 });

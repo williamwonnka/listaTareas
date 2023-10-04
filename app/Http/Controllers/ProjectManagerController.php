@@ -46,10 +46,11 @@ class ProjectManagerController extends Controller
         return response()->json($tasks);
     }
 
-    public function getTasksDetails(Request $request)
+    public function createProject(Request $request)
     {
         $allParameterInApi = [
-            'task_id' => 'required|integer'
+            'name' => 'required|string',
+            'description' => 'string'
         ];
 
         $response = $this->validateParameters($allParameterInApi, $request->all());
@@ -64,48 +65,12 @@ class ProjectManagerController extends Controller
 
         $apiDataReceived = $response->data;
 
-        // start endpoint logic
-
-        $tasks = $this->taskService->getTasksDetails($apiDataReceived['task_id']);
-
-        if ($tasks->status)
-        {
-            return response()->json($tasks->data);
-        }
-        else
-        {
-            return $this->error(
-                [
-                    'errorType' => $tasks->errorType,
-                    'detail' => $tasks->errorMessage
-                ],
-                $this->errorBadRequest
-            );
-        }
-    }
-
-    public function updateTaskStatus(Request $request)
-    {
-        $allParameterInApi = [
-            'status_id' => 'required|integer',
-            'task_id' => 'required|integer'
-        ];
-
-        $response = $this->validateParameters($allParameterInApi, $request->all());
-
-        if (!$response->status)
-        {
-            return $this->error(
-                $response->data,
-                $this->errorBadRequest
-            );
-        }
-
-        $apiDataReceived = $response->data;
+        if (!isset($apiDataReceived['description']))
+            $apiDataReceived['description'] = '';
 
         // start endpoint logic
 
-        $response = $this->taskService->updateTaskStatus($apiDataReceived['task_id'], $apiDataReceived['status_id']);
+        $response = $this->projectManagerService->createProject($apiDataReceived['name'], $apiDataReceived['description']);
 
         if($response->status)
         {
@@ -123,13 +88,12 @@ class ProjectManagerController extends Controller
         }
     }
 
-    public function createTask(Request $request)
+    public function updateProject(Request $request)
     {
         $allParameterInApi = [
-            'title' => 'required|string',
-            'details' => 'string',
-            'user_id' => 'integer',
-            'sprint_id' => 'integer'
+            'project_id' => 'required|integer',
+            'name' => 'string',
+            'description' => 'string'
         ];
 
         $response = $this->validateParameters($allParameterInApi, $request->all());
@@ -144,58 +108,18 @@ class ProjectManagerController extends Controller
 
         $apiDataReceived = $response->data;
 
-        // start endpoint logic
+        if (!isset($apiDataReceived['description']))
+            $apiDataReceived['description'] = '';
 
-        $response = $this->taskService->createTask($apiDataReceived['title'], $apiDataReceived['details'] ?? '', $apiDataReceived['user_id'] ?? null, $apiDataReceived['sprint_id'] ?? null);
-
-        if($response->status)
-        {
-            return response()->json($response);
-        }
-        else
-        {
-            return $this->error(
-                [
-                    'errorType' => $response->errorType,
-                    'detail' => $response->errorMessage
-                ],
-                $this->errorBadRequest
-            );
-        }
-    }
-
-    public function updateTask(Request $request)
-    {
-        $allParameterInApi = [
-            'task_id' => 'required|integer',
-            'title' => 'string',
-            'details' => 'string',
-            'user_id' => 'integer',
-            'status_id' => 'integer',
-            'sprint_id' => 'integer'
-        ];
-
-        $response = $this->validateParameters($allParameterInApi, $request->all());
-
-        if (!$response->status)
-        {
-            return $this->error(
-                $response->data,
-                $this->errorBadRequest
-            );
-        }
-
-        $apiDataReceived = $response->data;
+        if (!isset($apiDataReceived['name']))
+            $apiDataReceived['name'] = '';
 
         // start endpoint logic
 
-        $response = $this->taskService->updateTask(
-            $apiDataReceived['task_id'],
-            $apiDataReceived['title'] ?? null,
-            $apiDataReceived['details'] ?? null,
-            $apiDataReceived['user_id'] ?? null,
-            $apiDataReceived['status_id'] ?? null,
-            $apiDataReceived['sprint_id'] ?? null
+        $response = $this->projectManagerService->updateProject(
+            $apiDataReceived['project_id'],
+            $apiDataReceived['name'],
+            $apiDataReceived['description']
         );
 
         if($response->status)
@@ -214,10 +138,10 @@ class ProjectManagerController extends Controller
         }
     }
 
-    public function deleteTask(Request $request)
+    public function deleteProject(Request $request)
     {
         $allParameterInApi = [
-            'task_id' => 'required|integer'
+            'project_id' => 'required|integer'
         ];
 
         $response = $this->validateParameters($allParameterInApi, $request->all());
@@ -234,18 +158,18 @@ class ProjectManagerController extends Controller
 
         // start endpoint logic
 
-        $tasks = $this->taskService->deleteTask($apiDataReceived['task_id']);
+        $result = $this->projectManagerService->deleteProject($apiDataReceived['project_id']);
 
-        if ($tasks->status)
+        if ($result->status)
         {
-            return response()->json($tasks);
+            return response()->json($result);
         }
         else
         {
             return $this->error(
                 [
-                    'errorType' => $tasks->errorType,
-                    'detail' => $tasks->errorMessage
+                    'errorType' => $result->errorType,
+                    'detail' => $result->errorMessage
                 ],
                 $this->errorBadRequest
             );
