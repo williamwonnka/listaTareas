@@ -63,4 +63,6 @@ Route::middleware('customAuth')->prefix('administratorManagement')->group(functi
     Route::get('getAllUsers', [AdministratorManagementController::class, 'getAllUsers']);
 
     Route::put('updateUser', [AdministratorManagementController::class, 'updateUser']);
+
+    Route::delete('deleteUser', [AdministratorManagementController::class, 'deleteUser']);
 });

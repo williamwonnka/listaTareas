@@ -104,4 +104,36 @@ class AdministratorManagementService
 
         return $response;
     }
+
+    public function deleteUser(mixed $userId)
+    {
+        $response = new AdministratorManagementServiceResponse();
+
+        $user = $this->administratorManagementRepository->getUserById($userId);
+
+        if ($user)
+        {
+            $result = $this->administratorManagementRepository->deleteUser($userId);
+
+            if ($result)
+            {
+                $response->status = true;
+                $response->message = 'User deleted';
+            }
+            else
+            {
+                $response->status = false;
+                $response->errorMessage = 'User not deleted';
+                $response->errorType = 'not_deleted';
+            }
+        }
+        else
+        {
+            $response->status = false;
+            $response->errorMessage = 'User not found';
+            $response->errorType = 'not_found';
+        }
+
+        return $response;
+    }
 }

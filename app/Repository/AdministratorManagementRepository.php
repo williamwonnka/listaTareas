@@ -55,4 +55,11 @@ class AdministratorManagementRepository
 
         return$builder->update($updateData);
     }
+
+    public function deleteUser(mixed $userId)
+    {
+        $builder = User::where('id', $userId);
+
+        return $builder->delete();
+    }
 }
