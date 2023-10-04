@@ -68,4 +68,16 @@ class BacklogRepository
 
         return $builder->update($updatesArray);
     }
+
+    public function deleteSprint(mixed $sprintId)
+    {
+        $sprint = Sprint::find($sprintId);
+
+        if ($sprint)
+        {
+            return $sprint->delete();
+        }
+
+        return false;
+    }
 }

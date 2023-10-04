@@ -99,4 +99,26 @@ class BacklogService
 
         return $response;
     }
+
+    public function deleteSprint(mixed $sprintId)
+    {
+        $response = new SprintServiceResponse();
+
+        $result = $this->backlogRepository->deleteSprint($sprintId);
+
+        if ($result)
+        {
+            $response->status = true;
+            $response->message = 'Sprint deleted successfully';
+        }
+        else
+        {
+            $response->status = false;
+            $response->message = 'Failed to delete sprint';
+            $response->errorType = 'internal';
+            $response->errorMessage = 'Failed to delete sprint';
+        }
+
+        return $response;
+    }
 }

@@ -129,4 +129,39 @@ class BacklogController extends Controller
             );
         }
     }
+
+    public function deleteSprint(Request $request)
+    {
+        $allParameterInApi = [
+            'sprint_id' => 'required|integer',
+        ];
+
+        $response = $this->validateParameters($allParameterInApi, $request->all());
+
+        if (!$response->status)
+        {
+            return $this->error(
+                $response->data,
+                $this->errorBadRequest
+            );
+        }
+
+        $apiDataReceived = $response->data;
+
+        // start endpoint logic
+
+        $response = $this->backlogService->deleteSprint($apiDataReceived['sprint_id']);
+
+        if ($response->status)
+        {
+            return response()->json($response);
+        }
+        else
+        {
+            return $this->error(
+                $response->data,
+                $this->errorBadRequest
+            );
+        }
+    }
 }

@@ -52,4 +52,6 @@ Route::middleware('customAuth')->prefix('backlogManagement')->group(function () 
     Route::get('getSprintListWithTasks', [BacklogController::class, 'getSprintListWithTasks']);
 
     Route::put('updateSprint', [BacklogController::class, 'updateSprint']);
+
+    Route::delete('deleteSprint', [BacklogController::class, 'deleteSprint']);
 });
