@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\AuthenticationController;
+use App\Http\Controllers\BacklogController;
 use App\Http\Controllers\ProjectManagerController;
 use App\Http\Controllers\TaskManagerController;
 use Illuminate\Support\Facades\Route;
@@ -43,4 +44,8 @@ Route::middleware('customAuth')->prefix('projectsManagement')->group(function ()
     Route::put('updateProject', [ProjectManagerController::class, 'updateProject']);
 
     Route::delete('deleteProject', [ProjectManagerController::class, 'deleteProject']);
+});
+
+Route::middleware('customAuth')->prefix('backlogManagement')->group(function () {
+    Route::post('createSprint', [BacklogController::class, 'createSprint']);
 });
