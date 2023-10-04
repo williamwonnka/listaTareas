@@ -38,4 +38,34 @@ class BacklogRepository
             ->get()
             ->toArray();
     }
+
+    public function getSprintById(mixed $sprintId)
+    {
+        return Sprint::whereId($sprintId)
+            ->first();
+    }
+
+    public function updateSprint(mixed $sprintId, mixed $name, mixed $startDate, mixed $endDate)
+    {
+        $builder = Sprint::whereId($sprintId);
+
+        $updatesArray = [];
+
+        if ($name != '' && $name != null)
+        {
+            $updatesArray['name'] = $name;
+        }
+
+        if ($startDate)
+        {
+            $updatesArray['start_date'] = $startDate;
+        }
+
+        if ($endDate)
+        {
+            $updatesArray['end_date'] = $endDate;
+        }
+
+        return $builder->update($updatesArray);
+    }
 }

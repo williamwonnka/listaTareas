@@ -86,4 +86,47 @@ class BacklogController extends Controller
             );
         }
     }
+
+    public function updateSprint(Request $request)
+    {
+        $allParameterInApi = [
+            'name' => 'string',
+            'start_date' => 'date',
+            'end_date' => 'date',
+            'sprint_id' => 'required|integer',
+        ];
+
+        $response = $this->validateParameters($allParameterInApi, $request->all());
+
+        if (!$response->status)
+        {
+            return $this->error(
+                $response->data,
+                $this->errorBadRequest
+            );
+        }
+
+        $apiDataReceived = $response->data;
+
+        if (!isset($apiDataReceived['name']))
+        {
+            $apiDataReceived['name'] = '';
+        }
+
+        // start endpoint logic
+
+        $response = $this->backlogService->updateSprint($apiDataReceived['sprint_id'], $apiDataReceived['name'], $apiDataReceived['start_date'] ?? null, $apiDataReceived['end_date'] ?? null);
+
+        if ($response->status)
+        {
+            return response()->json($response->data);
+        }
+        else
+        {
+            return $this->error(
+                $response->data,
+                $this->errorBadRequest
+            );
+        }
+    }
 }

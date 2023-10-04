@@ -50,4 +50,6 @@ Route::middleware('customAuth')->prefix('backlogManagement')->group(function () 
     Route::post('createSprint', [BacklogController::class, 'createSprint']);
 
     Route::get('getSprintListWithTasks', [BacklogController::class, 'getSprintListWithTasks']);
+
+    Route::put('updateSprint', [BacklogController::class, 'updateSprint']);
 });

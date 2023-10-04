@@ -75,4 +75,28 @@ class BacklogService
 
         return $response;
     }
+
+    public function updateSprint(mixed $sprintId, mixed $name, mixed $startDate, mixed $endDate)
+    {
+        $response = new SprintServiceResponse();
+
+        $result = $this->backlogRepository->updateSprint($sprintId, $name, $startDate, $endDate);
+
+        $sprint = $this->backlogRepository->getSprintById($sprintId);
+
+        if ($sprint)
+        {
+            $response->status = true;
+            $response->message = 'Sprint updated successfully';
+            $response->data = $sprint->toArray();
+        }
+        else
+        {
+            $response->message = 'Failed to update sprint';
+            $response->errorType = 'internal';
+            $response->errorMessage = 'Failed to update sprint';
+        }
+
+        return $response;
+    }
 }

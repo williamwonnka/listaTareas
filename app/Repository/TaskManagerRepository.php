@@ -74,12 +74,12 @@ class TaskManagerRepository
 
         $updatesArray = [];
 
-        if ($title)
+        if ($title != '' && $title != null)
         {
             $updatesArray['title'] = $title;
         }
 
-        if ($details)
+        if ($details != '' && $details != null)
         {
             $updatesArray['details'] = $details;
         }

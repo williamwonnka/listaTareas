@@ -33,7 +33,7 @@ class ProjectManagerRepository
 
         $updatesArray = [];
 
-        if ($name)
+        if ($name != '' && $name != null)
         {
             $updatesArray['name'] = $name;
         }
